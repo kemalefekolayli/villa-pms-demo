@@ -1,8 +1,9 @@
 // VillaRepository.java
 package io.villapms.villapms.repository;
 
-import io.villapms.villapms.model.Villa;
+import io.villapms.villapms.model.Property.Property;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VillaRepository extends JpaRepository<Villa, Long> {
+public interface PropertyRepository extends JpaRepository<Property, Long> {
 }

@@ -1,8 +1,9 @@
 package io.villapms.villapms.controller;
 
 import io.villapms.villapms.model.Booking.Booking;
-import io.villapms.villapms.model.Villa;
-import io.villapms.villapms.repository.VillaRepository;
+import io.villapms.villapms.model.Property.Property;
+import io.villapms.villapms.repository.PropertyRepository;
+import io.villapms.villapms.repository.PropertyRepository
 import io.villapms.villapms.service.AvailabilityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,17 @@ import java.util.Map;
 @RequestMapping("/villas")
 public class VillaController {
     private final AvailabilityService availSvc;
-    private final VillaRepository villaRepo;
+    private final PropertyRepository propRepo;
 
-    public VillaController(AvailabilityService availSvc, VillaRepository villaRepo) {
+    public VillaController(AvailabilityService availSvc, PropertyRepository villaRepo) {
         this.availSvc = availSvc;
-        this.villaRepo = villaRepo;
+        this.propRepo = villaRepo;
     }
 
     // 1) List all villas (so frontend knows villa IDs & nightly rates)
     @GetMapping
-    public List<Villa> listVillas() {
-        return villaRepo.findAll();
+    public List<Property> listVillas() {
+        return propRepo.findAll();
     }
 
     // 2) Return existing bookings for one villa

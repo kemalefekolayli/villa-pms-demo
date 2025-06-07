@@ -4,12 +4,17 @@ package io.villapms.villapms.model.Property;
 import io.villapms.villapms.model.Booking.Booking;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "property")
 @Data
+@Getter
+@Setter
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

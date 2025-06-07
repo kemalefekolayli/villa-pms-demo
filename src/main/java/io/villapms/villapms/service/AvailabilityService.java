@@ -1,9 +1,9 @@
 package io.villapms.villapms.service;
 
 import io.villapms.villapms.model.Booking.Booking;
-import io.villapms.villapms.model.Villa;
+import io.villapms.villapms.model.Property.Property;
 import io.villapms.villapms.repository.BookingRepository;
-import io.villapms.villapms.repository.VillaRepository;
+import io.villapms.villapms.repository.PropertyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +15,12 @@ import java.util.List;
 @Service
 public class AvailabilityService {
     private final BookingRepository bookingRepo;
-    private final VillaRepository villaRepo;
 
-    public AvailabilityService(BookingRepository bookingRepo, VillaRepository villaRepo) {
+    private final PropertyRepository propertyRepo;
+
+    public AvailabilityService(BookingRepository bookingRepo, PropertyRepository villaRepo) {
         this.bookingRepo = bookingRepo;
-        this.villaRepo   = villaRepo;
+        this.propertyRepo  = villaRepo;
     }
 
     // 1) Return all existing bookings for a given villa (so frontend can mark those dates as “taken”)
@@ -35,7 +36,7 @@ public class AvailabilityService {
 
     // 3) Calculate total price = nights × nightlyRate
     public BigDecimal calculatePrice(Long villaId, LocalDate start, LocalDate end) {
-        Villa villa = villaRepo.findById(villaId)
+        Property villa = propertyRepo.findById(villaId)
                 .orElseThrow(() -> new RuntimeException("Villa not found"));
         long nights = ChronoUnit.DAYS.between(start, end);
         return villa.getNightlyRate().multiply(BigDecimal.valueOf(nights));
@@ -47,7 +48,7 @@ public class AvailabilityService {
         if (!isDateRangeAvailable(villaId, start, end)) {
             throw new RuntimeException("Dates not available");
         }
-        Villa villa = villaRepo.findById(villaId)
+        Property villa = propertyRepo.findById(villaId)
                 .orElseThrow(() -> new RuntimeException("Villa not found"));
         Booking b = new Booking();
         b.setVilla(villa);
