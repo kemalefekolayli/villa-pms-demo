@@ -1,7 +1,8 @@
 
 // Booking.java (updated)
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.Booking;
 
+import io.villapms.villapms.model.Property.Property;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;

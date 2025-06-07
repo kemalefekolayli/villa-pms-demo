@@ -1,5 +1,5 @@
 // BookingGuestId.java
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.Booking;
 
 import jakarta.persistence.Embeddable;
 import lombok.Data;

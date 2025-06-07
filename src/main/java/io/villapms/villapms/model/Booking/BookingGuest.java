@@ -1,11 +1,10 @@
 
 // BookingGuest.java
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.Booking;
 
+import io.villapms.villapms.model.User.GuestType;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "booking_guests")

@@ -1,6 +1,7 @@
 
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.Booking;
 
+import io.villapms.villapms.model.Fee.OtherFee;
 import jakarta.persistence.*;
 import lombok.Data;
 

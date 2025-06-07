@@ -1,6 +1,7 @@
 // Property.java (replaces Villa.java)
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.Property;
 
+import io.villapms.villapms.model.Booking.Booking;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -16,6 +17,9 @@ public class Property {
 
     @Column(name = "location_id", nullable = false)
     private Long locationId; // references il_ilce.id
+
+    @Column(name = "nightly_rate")
+    private Integer nightlyRate; // price per night in cents
 
     @Column(nullable = false)
     private String name;

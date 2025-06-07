@@ -1,6 +1,6 @@
 package io.villapms.villapms.controller;
 
-import io.villapms.villapms.model.Booking;
+import io.villapms.villapms.model.Booking.Booking;
 import io.villapms.villapms.model.Villa;
 import io.villapms.villapms.repository.VillaRepository;
 import io.villapms.villapms.service.AvailabilityService;

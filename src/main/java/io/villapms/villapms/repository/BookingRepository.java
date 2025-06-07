@@ -1,7 +1,7 @@
 // BookingRepository.java
 package io.villapms.villapms.repository;
 
-import io.villapms.villapms.model.Booking;
+import io.villapms.villapms.model.Booking.Booking;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

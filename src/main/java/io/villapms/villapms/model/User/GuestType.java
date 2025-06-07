@@ -1,5 +1,5 @@
 
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.User;
 
 import jakarta.persistence.*;
 import lombok.Data;

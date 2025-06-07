@@ -1,6 +1,6 @@
 
 // BookingStatus.java
-package io.villapms.villapms.model;
+package io.villapms.villapms.model.Booking;
 
 public enum BookingStatus {
     PENDING,

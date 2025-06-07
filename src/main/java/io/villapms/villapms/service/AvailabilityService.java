@@ -1,6 +1,6 @@
 package io.villapms.villapms.service;
 
-import io.villapms.villapms.model.Booking;
+import io.villapms.villapms.model.Booking.Booking;
 import io.villapms.villapms.model.Villa;
 import io.villapms.villapms.repository.BookingRepository;
 import io.villapms.villapms.repository.VillaRepository;
