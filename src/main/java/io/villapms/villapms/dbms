@@ -1,0 +1,160 @@
+
+
+Table property {
+  id integer [pk]
+  location_id integer [ref: > il_ilce.id]
+  name varchar [not null]
+  description varchar [not null]
+  size int [not null]          // in m²
+  bed_num int [not null]
+  person_size int [not null]   // max occupants
+  property_address varchar [not null]
+  animals_allowed bool         // can pets stay?
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table il {
+  id integer [pk]
+  il_name varchar [not null]
+}
+
+Table il_ilce {
+  id integer [pk]
+  il_id integer [ref: > il.id]
+  ililce_name varchar [not null]
+}
+
+Table user_account {
+  id integer [pk]
+  name varchar [not null]
+  surname varchar [not null]
+  email varchar [not null, unique]
+  phone_number varchar [not null]
+  password varchar [not null]
+  birthday date
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table category {
+  id integer [pk]
+  category_name varchar [not null, unique]
+}
+
+Table property_category {
+  property_id integer [ref: > property.id]
+  category_id integer [ref: > category.id]
+
+  Indexes {
+    (property_id, category_id) [pk]
+  }
+}
+
+Table features {
+  id integer [pk]
+  feature_name varchar [not null, unique]
+  feature_description varchar
+}
+
+Table property_features {
+  feature_id integer [ref: > features.id]
+  property_id integer [ref: > property.id]
+
+  Indexes {
+    (feature_id, property_id) [pk]
+  }
+}
+
+Table rules {
+  id integer [pk]
+  rule_name varchar [not null]
+  rule_description varchar [not null]
+}
+
+Table property_rules {
+  property_id integer [ref: > property.id]
+  rule_id integer [ref: > rules.id]
+
+  Indexes {
+    (property_id, rule_id) [pk]
+  }
+}
+
+Table user_review {
+  id integer [pk]
+  property_id integer [ref: > property.id]
+  user_id integer [ref: > user_account.id]
+  review_description varchar(500)
+  rating float [not null]
+  created_at timestamp
+  updated_at timestamp
+  // remove average_rating here, compute it separately
+}
+
+Table guest_type {
+  id integer [pk]
+  guest_type_name varchar [not null, unique]
+  guest_description varchar
+}
+
+Enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+  EXPIRED
+}
+
+Table booking {
+  id integer [pk]
+  property_id integer [ref: > property.id]
+  user_id integer [ref: > user_account.id]
+  checkin_date date       [not null]
+  checkout_date date      [not null]
+  // If you want PostgreSQL exclusion constraint, add a range here:
+  stay_period daterange [not null, note: 'GENERATED AS (daterange(checkin_date, checkout_date, \'[]\')) STORED']
+
+  nightly_rate int [not null] // price per night in cents or smallest currency unit
+
+  status BookingStatus [not null, default: 'PENDING']
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table other_fees {
+  id integer [pk]
+  fee_name varchar [not null]
+  fee_description varchar
+}
+
+Table booking_fees {
+  booking_id integer [ref: > booking.id]
+  fee_id integer [ref: > other_fees.id]
+  fee_amount int [not null]
+
+  Indexes {
+    (booking_id, fee_id) [pk]
+  }
+}
+
+Table booking_guests {
+  booking_id integer [ref: > booking.id]
+  guest_type_id integer [ref: > guest_type.id]
+  total_guests int
+
+  Indexes {
+    (booking_id, guest_type_id) [pk]
+  }
+}
+
+Table favorite {
+  user_id integer [ref: > user_account.id]
+  property_id integer [ref: > property.id]
+
+  Indexes {
+    (user_id, property_id) [pk]
+  }
+}
