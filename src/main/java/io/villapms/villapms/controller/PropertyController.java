@@ -14,67 +14,65 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/villas")
-public class VillaController {
+@RequestMapping("/properties")
+public class PropertyController {
     private final AvailabilityService availSvc;
     private final PropertyRepository propRepo;
 
-    public VillaController(AvailabilityService availSvc, PropertyRepository villaRepo) {
+    public PropertyController(AvailabilityService availSvc, PropertyRepository propRepo) {
         this.availSvc = availSvc;
-        this.propRepo = villaRepo;
+        this.propRepo = propRepo;
     }
 
-    // 1) List all villas (so frontend knows villa IDs & nightly rates)
     @GetMapping
-    public List<Property> listVillas() {
+    public List<Property> listProperties() {
         return propRepo.findAll();
     }
 
-    // 2) Return existing bookings for one villa
-    @GetMapping("/{villaId}/availability")
-    public List<Booking> getBookings(@PathVariable Long villaId) {
-        return availSvc.getAllBookings(villaId);
+    @GetMapping("/{propertyId}/availability")
+    public List<Booking> getBookings(@PathVariable Long propertyId) {
+        return availSvc.getAllBookings(propertyId);
     }
 
-    // 3) Calculate a price quote (and check availability) for given date‐range
-    @PostMapping("/{villaId}/quote")
+    @PostMapping("/{propertyId}/quote")
     public Map<String, Object> getQuote(
-            @PathVariable Long villaId,
+            @PathVariable Long propertyId,
             @RequestBody Map<String, String> payload
     ) {
         LocalDate start = LocalDate.parse(payload.get("startDate"));
-        LocalDate end   = LocalDate.parse(payload.get("endDate"));
+        LocalDate end = LocalDate.parse(payload.get("endDate"));
 
-        boolean available = availSvc.isDateRangeAvailable(villaId, start, end);
+        boolean available = availSvc.isDateRangeAvailable(propertyId, start, end);
         if (!available) {
             return Map.of("available", false);
         }
-        BigDecimal totalPrice = availSvc.calculatePrice(villaId, start, end);
+        BigDecimal totalPrice = availSvc.calculatePrice(propertyId, start, end);
         return Map.of(
-                "available",  true,
+                "available", true,
                 "totalPrice", totalPrice
         );
     }
 
-    // 4) Create a booking if dates are still free
-    @PostMapping("/{villaId}/book")
+    @PostMapping("/{propertyId}/book")
     public ResponseEntity<?> book(
-            @PathVariable Long villaId,
+            @PathVariable Long propertyId,
             @RequestBody Map<String, String> payload
     ) {
         LocalDate start = LocalDate.parse(payload.get("startDate"));
-        LocalDate end   = LocalDate.parse(payload.get("endDate"));
+        LocalDate end = LocalDate.parse(payload.get("endDate"));
+        // TODO: Get userId from authentication context
+        Long userId = 1L; // Temporary placeholder
 
-        if (!availSvc.isDateRangeAvailable(villaId, start, end)) {
+        if (!availSvc.isDateRangeAvailable(propertyId, start, end)) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("message", "Dates not available"));
         }
 
-        Booking booking = availSvc.bookVilla(villaId, start, end);
+        Booking booking = availSvc.bookProperty(propertyId, start, end, userId);
         return ResponseEntity.ok(Map.of(
                 "bookingId", booking.getId(),
-                "startDate",  booking.getStartDate(),
-                "endDate",    booking.getEndDate()
+                "startDate", booking.getCheckinDate(),
+                "endDate", booking.getCheckoutDate()
         ));
     }
 }
