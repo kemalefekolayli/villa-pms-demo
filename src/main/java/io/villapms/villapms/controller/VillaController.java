@@ -3,7 +3,6 @@ package io.villapms.villapms.controller;
 import io.villapms.villapms.model.Booking.Booking;
 import io.villapms.villapms.model.Property.Property;
 import io.villapms.villapms.repository.PropertyRepository;
-import io.villapms.villapms.repository.PropertyRepository
 import io.villapms.villapms.service.AvailabilityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
