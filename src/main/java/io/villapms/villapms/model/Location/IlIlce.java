@@ -12,9 +12,18 @@ public class IlIlce {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "il_id", nullable = false)
-    private Long ilId; // references il.id
+    @Column(name = "province_name", nullable = false)
+    private String provinceName;
 
-    @Column(name = "ililce_name", nullable = false)
-    private String ililceName;
+    @Column(name = "district_name", nullable = false)
+    private String districtName;
+
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @PrePersist
+    @PreUpdate
+    private void updateFullName() {
+        this.fullName = provinceName + " / " + districtName;
+    }
 }

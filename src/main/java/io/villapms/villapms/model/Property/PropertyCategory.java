@@ -1,6 +1,6 @@
 
 // PropertyCategory.java
-package io.villapms.villapms.model.property.junction;
+package io.villapms.villapms.model.Property.junction;
 
 import io.villapms.villapms.model.Property.Property;
 import io.villapms.villapms.model.Property.Category;

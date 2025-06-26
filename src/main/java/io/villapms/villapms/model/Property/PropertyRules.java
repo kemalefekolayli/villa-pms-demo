@@ -1,26 +1,25 @@
-
-// PropertyFeatures.java
+// PropertyRules.java
 package io.villapms.villapms.model.Property.junction;
 
 import io.villapms.villapms.model.Property.Property;
-import io.villapms.villapms.model.Property.Features;
+import io.villapms.villapms.model.Property.Rules;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "property_features")
+@Table(name = "property_rules")
 @Data
-public class PropertyFeatures {
+public class PropertyRules {
     @EmbeddedId
-    private PropertyFeaturesId id;
-
-    @ManyToOne
-    @MapsId("featureId")
-    @JoinColumn(name = "feature_id")
-    private Features feature;
+    private PropertyRulesId id;
 
     @ManyToOne
     @MapsId("propertyId")
     @JoinColumn(name = "property_id")
     private Property property;
+
+    @ManyToOne
+    @MapsId("ruleId")
+    @JoinColumn(name = "rule_id")
+    private Rules rule;
 }

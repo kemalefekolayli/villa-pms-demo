@@ -3,6 +3,7 @@
 package io.villapms.villapms.model.Booking;
 
 import io.villapms.villapms.model.Property.Property;
+import io.villapms.villapms.model.User.UserAccount;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class Booking {
     private Property property;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId; // references your existing user system
+    private Long userId;
 
     @Column(name = "checkin_date", nullable = false)
     private LocalDate checkinDate;
@@ -31,7 +32,17 @@ public class Booking {
     private LocalDate checkoutDate;
 
     @Column(name = "nightly_rate", nullable = false)
-    private Integer nightlyRate; // price per night in cents
+    private Integer nightlyRate;
+
+    // Simplified guest management
+    @Column(name = "total_guests", nullable = false)
+    private Integer totalGuests;
+
+    @Column(name = "adults")
+    private Integer adults;
+
+    @Column(name = "children")
+    private Integer children;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -43,11 +54,13 @@ public class Booking {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
-    private List<BookingFee> bookingFees;
-
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
-    private List<BookingGuest> bookingGuests;
+    // Compatibility methods (keep existing code working)
+    public LocalDate getStartDate() { return checkinDate; }
+    public void setStartDate(LocalDate startDate) { this.checkinDate = startDate; }
+    public LocalDate getEndDate() { return checkoutDate; }
+    public void setEndDate(LocalDate endDate) { this.checkoutDate = endDate; }
+    public Property getVilla() { return property; }
+    public void setVilla(Property property) { this.property = property; }
 
     @PrePersist
     protected void onCreate() {
@@ -58,30 +71,5 @@ public class Booking {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    // Compatibility methods for existing code
-    public LocalDate getStartDate() {
-        return checkinDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.checkinDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return checkoutDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.checkoutDate = endDate;
-    }
-
-    public Property getVilla() {
-        return property;
-    }
-
-    public void setVilla(Property property) {
-        this.property = property;
     }
 }

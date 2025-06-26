@@ -2,10 +2,13 @@
 // UserAccount.java
 package io.villapms.villapms.model.User;
 
+import io.villapms.villapms.model.Property.Property;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_account")
@@ -37,6 +40,24 @@ public class UserAccount {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // Favorites relationship
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "favorite",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "property_id")
+    )
+    private Set<Property> favoriteProperties = new HashSet<>();
+
+    // OOP methods
+    public void addFavorite(Property property) {
+        this.favoriteProperties.add(property);
+    }
+
+    public void removeFavorite(Property property) {
+        this.favoriteProperties.remove(property);
+    }
 
     @PrePersist
     protected void onCreate() {
