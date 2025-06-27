@@ -12,8 +12,7 @@ import io.villapms.villapms.model.User.UserAccount;
 @Table(name = "favorite")
 @Data
 public class Favorite {
-    @EmbeddedId
-    private FavoriteId id;
+
 
     @ManyToOne
     @MapsId("userId")
