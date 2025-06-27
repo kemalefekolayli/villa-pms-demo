@@ -33,6 +33,7 @@ public class ReservationService {
         this.availabilityService = availabilityService;
     }
 
+    // Update ReservationService.createReservation
     public Booking createReservation(ReservationCreateDto reservationDto) {
         // Validate dates
         if (!reservationDto.getCheckinDate().isBefore(reservationDto.getCheckoutDate())) {
@@ -41,18 +42,20 @@ public class ReservationService {
 
         // Check if property exists
         Property property = propertyRepository.findById(reservationDto.getPropertyId())
-                .orElseThrow(() -> new RuntimeException("Property not found with id: " + reservationDto.getPropertyId()));
+                .orElseThrow(() -> new RuntimeException("Property not found"));
 
         // Check if user exists
         userRepository.findById(reservationDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + reservationDto.getUserId()));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Check availability
-        if (!availabilityService.isDateRangeAvailable(
+        // Check availability for requested villas
+        Integer villasRequested = reservationDto.getVillasRequested();
+        if (!availabilityService.areVillasAvailable(
                 reservationDto.getPropertyId(),
                 reservationDto.getCheckinDate(),
-                reservationDto.getCheckoutDate())) {
-            throw new RuntimeException("Property is not available for the selected dates");
+                reservationDto.getCheckoutDate(),
+                villasRequested)) {
+            throw new RuntimeException("Not enough villas available for the selected dates");
         }
 
         Booking reservation = new Booking();
@@ -60,6 +63,10 @@ public class ReservationService {
         reservation.setUserId(reservationDto.getUserId());
         reservation.setCheckinDate(reservationDto.getCheckinDate());
         reservation.setCheckoutDate(reservationDto.getCheckoutDate());
+        reservation.setVillasBooked(villasRequested);
+        reservation.setTotalGuests(reservationDto.getTotalGuests());
+        reservation.setAdults(reservationDto.getAdults());
+        reservation.setChildren(reservationDto.getChildren());
         reservation.setNightlyRate(reservationDto.getNightlyRate() != null ?
                 reservationDto.getNightlyRate() : property.getNightlyRate());
         reservation.setStatus(BookingStatus.PENDING);

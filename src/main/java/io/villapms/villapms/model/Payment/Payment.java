@@ -4,14 +4,6 @@ import io.villapms.villapms.model.Booking.Booking;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-// Payment.java (güncellenmiş hali)
-package io.villapms.villapms.model.Payment;
-
-import io.villapms.villapms.model.Booking.Booking;
-import jakarta.persistence.*;
-import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,7 +19,7 @@ public class Payment {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "booking_id")
-    private Booking booking; 
+    private Booking booking;
 
     @Column(nullable = false)
     private BigDecimal amount;

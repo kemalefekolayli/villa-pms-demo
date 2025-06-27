@@ -1,3 +1,4 @@
+// PropertyService.java (Fixed)
 package io.villapms.villapms.service;
 
 import io.villapms.villapms.dto.PropertyCreateDto;
@@ -25,12 +26,23 @@ public class PropertyService {
         property.setLocationId(propertyDto.getLocationId());
         property.setName(propertyDto.getName());
         property.setDescription(propertyDto.getDescription());
+
+        // Multi-villa fields
+        property.setTotalVillas(propertyDto.getTotalVillas());
+        property.setVillaType(propertyDto.getVillaType());
+        property.setIsMultiVilla(propertyDto.getIsMultiVilla());
+
+        // Villa specifications
         property.setSize(propertyDto.getSize());
         property.setBedNum(propertyDto.getBedNum());
         property.setPersonSize(propertyDto.getPersonSize());
         property.setPropertyAddress(propertyDto.getPropertyAddress());
         property.setAnimalsAllowed(propertyDto.getAnimalsAllowed());
+
+        // Pricing
         property.setNightlyRate(propertyDto.getNightlyRate());
+        property.setCleaningFee(propertyDto.getCleaningFee());
+        property.setSecurityDeposit(propertyDto.getSecurityDeposit());
 
         return propertyRepository.save(property);
     }
@@ -45,11 +57,31 @@ public class PropertyService {
     }
 
     public List<Property> searchProperties(Long locationId, Integer minSize, Integer maxSize, Boolean animalsAllowed) {
-        return propertyRepository.findAll(Specification.where(
-                        locationId != null ? hasLocationId(locationId) : null)
-                .and(minSize != null ? hasSizeGreaterThanOrEqual(minSize) : null)
-                .and(maxSize != null ? hasSizeLessThanOrEqual(maxSize) : null)
-                .and(animalsAllowed != null ? hasAnimalsAllowed(animalsAllowed) : null));
+        // Build specification dynamically (modern approach)
+        Specification<Property> spec = null;
+
+        if (locationId != null) {
+            spec = hasLocationId(locationId);
+        }
+
+        if (minSize != null) {
+            spec = spec == null ? hasSizeGreaterThanOrEqual(minSize) : spec.and(hasSizeGreaterThanOrEqual(minSize));
+        }
+
+        if (maxSize != null) {
+            spec = spec == null ? hasSizeLessThanOrEqual(maxSize) : spec.and(hasSizeLessThanOrEqual(maxSize));
+        }
+
+        if (animalsAllowed != null) {
+            spec = spec == null ? hasAnimalsAllowed(animalsAllowed) : spec.and(hasAnimalsAllowed(animalsAllowed));
+        }
+
+        // If no filters, return all
+        if (spec == null) {
+            return propertyRepository.findAll();
+        }
+
+        return propertyRepository.findAll(spec);
     }
 
     public Property updateProperty(Long id, PropertyUpdateDto updateDto) {
@@ -64,6 +96,19 @@ public class PropertyService {
         if (updateDto.getDescription() != null) {
             property.setDescription(updateDto.getDescription());
         }
+
+        // Multi-villa fields
+        if (updateDto.getTotalVillas() != null) {
+            property.setTotalVillas(updateDto.getTotalVillas());
+        }
+        if (updateDto.getVillaType() != null) {
+            property.setVillaType(updateDto.getVillaType());
+        }
+        if (updateDto.getIsMultiVilla() != null) {
+            property.setIsMultiVilla(updateDto.getIsMultiVilla());
+        }
+
+        // Villa specifications
         if (updateDto.getSize() != null) {
             property.setSize(updateDto.getSize());
         }
@@ -79,8 +124,16 @@ public class PropertyService {
         if (updateDto.getAnimalsAllowed() != null) {
             property.setAnimalsAllowed(updateDto.getAnimalsAllowed());
         }
+
+        // Pricing
         if (updateDto.getNightlyRate() != null) {
             property.setNightlyRate(updateDto.getNightlyRate());
+        }
+        if (updateDto.getCleaningFee() != null) {
+            property.setCleaningFee(updateDto.getCleaningFee());
+        }
+        if (updateDto.getSecurityDeposit() != null) {
+            property.setSecurityDeposit(updateDto.getSecurityDeposit());
         }
 
         return propertyRepository.save(property);

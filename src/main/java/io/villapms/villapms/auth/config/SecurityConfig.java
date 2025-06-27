@@ -1,3 +1,4 @@
+// src/main/java/io/villapms/villapms/auth/config/SecurityConfig.java
 package io.villapms.villapms.auth.config;
 
 import org.springframework.context.annotation.Bean;
@@ -22,8 +23,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**", "/api/health", "/api/version").permitAll()
+                        // Public endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/health", "/api/version").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
+
+                        // MVP: Allow property and booking endpoints for now
+                        .requestMatchers("/properties/**").permitAll()
+                        .requestMatchers("/api/homes/**").permitAll()
+                        .requestMatchers("/api/reservations/**").permitAll()
+
+                        // Require auth for everything else
                         .anyRequest().authenticated()
                 );
 
